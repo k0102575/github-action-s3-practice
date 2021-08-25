@@ -4,4 +4,4 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ toJson(github) }}"
+      - run: echo "${GITHUB_REF#refs/heads/})"
