@@ -24,8 +24,9 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       BUCKET_URL: ${{ github.ref == 'refs/heads/dev' && 'dev-qs.energyx.co.kr' || github.ref == 'refs/heads/stage' && 'stage-qs.energyx.co.kr' || 'qs.energyx.co.kr' }}
-      CLOUD_FRONT_ID: ${{ github.ref == 'refs/heads/dev' && 'E20R96SCL3WQIA	' || github.ref == 'refs/heads/stage' && 'E2X53NN8BR47FR' || 'E1KD2AVN3E5Z8M' }}
+      CLOUD_FRONT_ID: ${{ github.ref == 'refs/heads/dev' && 'E20R96SCL3WQIA' || github.ref == 'refs/heads/stage' && 'E2X53NN8BR47FR' || 'E1KD2AVN3E5Z8M' }}
 
+    steps:
       - uses: actions/checkout@v2
 
       - name: Use Node.js ${{ matrix.node-version }}
