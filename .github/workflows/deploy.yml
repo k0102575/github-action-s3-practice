@@ -25,10 +25,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: echo
+      - name: echo1
         run: echo ${{env.BUCKET_URL}}
+
+      - name: echo2
         run: echo ${{env.CLOUD_FRONT_ID}}
-        run: echo ${{GITHUB_REF#refs/heads/}}
+
+      - name: echo3
+        run: echo ${{env.GITHUB_REF#refs/heads/}}
 
       # - name: Use Node.js ${{ matrix.node-version }}
       #   uses: actions/setup-node@v1
