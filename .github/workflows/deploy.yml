@@ -2,6 +2,7 @@ name: GitHub Actions Demo
 
 on:
   pull_request:
+    types: [closed]
     branches:
       - master
       - stage
@@ -9,7 +10,6 @@ on:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == 'true'
     runs-on: ubuntu-18.04
 
     strategy:
@@ -32,7 +32,7 @@ jobs:
         run: echo ${{env.CLOUD_FRONT_ID}}
 
       - name: echo3
-        run: echo ${{env.GITHUB_REF#refs/heads/}}
+        run: echo ${{GITHUB_REF#refs/heads/}}
 
       # - name: Use Node.js ${{ matrix.node-version }}
       #   uses: actions/setup-node@v1
