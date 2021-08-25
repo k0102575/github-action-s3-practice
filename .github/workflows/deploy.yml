@@ -41,7 +41,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           aws s3 sync \
-            --recursive \
             --region ap-northeast-2 \
             --acl public-read --delete \
             build s3://qs.energyx.co.kr
