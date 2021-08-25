@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: echo text
         # run: echo ${{github.ref == 'refs/heads/dev'}}
-        run echo ${{env.SLACK_COLOR}}
+        run: echo ${{env.SLACK_COLOR}}
       # - uses: actions/checkout@v2
 
       # - name: Use Node.js ${{ matrix.node-version }}
