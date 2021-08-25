@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    if: github.event.pull_request.merged == 'true'
     runs-on: ubuntu-18.04
 
     strategy:
@@ -25,34 +26,36 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: echo
-        run: echo ${{github.ref}}
+        run: echo ${{env.BUCKET_URL}}
+        run: echo ${{env.CLOUD_FRONT_ID}}
+        run: echo ${{GITHUB_REF#refs/heads/}}
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+      # - name: Use Node.js ${{ matrix.node-version }}
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
 
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
-      - name: Install Dependencies
-        run: npm install
+      # - name: Cache node modules
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: node_modules
+      #     key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.OS }}-build-
+      #       ${{ runner.OS }}-
+      # - name: Install Dependencies
+      #   run: npm install
 
-      - name: Build
-        run: npm run build
+      # - name: Build
+      #   run: npm run build
 
-      - name: Deploy
-        run: |
-          aws s3 sync \
-            --region ap-northeast-2 \
-            --acl public-read --delete \
-            build s3://${{env.BUCKET_URL}}
+      # - name: Deploy
+      #   run: |
+      #     aws s3 sync \
+      #       --region ap-northeast-2 \
+      #       --acl public-read --delete \
+      #       build s3://${{env.BUCKET_URL}}
 
-      - name: Cloudfront cache remove
-        run: |
-          aws cloudfront create-invalidation --distribution-id ${{env.CLOUD_FRONT_ID}}	  --paths "/*"
+      # - name: Cloudfront cache remove
+      #   run: |
+      #     aws cloudfront create-invalidation --distribution-id ${{env.CLOUD_FRONT_ID}}	  --paths "/*"
