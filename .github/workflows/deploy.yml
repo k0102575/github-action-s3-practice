@@ -32,7 +32,7 @@ jobs:
         run: echo ${{env.CLOUD_FRONT_ID}}
 
       - name: echo3
-        run: echo ${{GITHUB_REF#refs/heads/}}
+        run: echo ${GITHUB_REF#refs/heads/}
 
       # - name: Use Node.js ${{ matrix.node-version }}
       #   uses: actions/setup-node@v1
