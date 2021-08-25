@@ -1,7 +1,17 @@
 name: GitHub Actions Demo
-on: [push]
+
+on:
+  push:
+    branches:
+      - master
+
 jobs:
-  Explore-GitHub-Actions:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-18.04
     steps:
-      - run: echo ${GITHUB_REF##*/}
+      - name: Checkout source code
+        uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "12"
+      - run: echo node -v
