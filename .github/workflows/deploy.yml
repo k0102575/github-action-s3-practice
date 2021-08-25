@@ -43,4 +43,5 @@ jobs:
           aws s3 sync \
             --recursive \
             --region ap-northeast-2 \
-            build s3://qs.energyx.co.kr public-read --delete # 자신의 레포지토리로 변경해주세요.
+            --acl public-read --delete \
+            build s3://qs.energyx.co.kr
