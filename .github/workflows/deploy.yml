@@ -32,7 +32,7 @@ jobs:
         run: echo ${{env.CLOUD_FRONT_ID}}
 
       - name: echo3
-        run: echo ${github.ref}
+        run: echo ${{github.ref}}
 
       - name: echo4
         run: echo ${{toJSon(github)}}
