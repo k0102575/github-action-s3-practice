@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+      - stage
+      - dev
 
 jobs:
   build:
@@ -14,7 +16,7 @@ jobs:
         node-version: [12.18.2]
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@${GITHUB_REF##*/}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
