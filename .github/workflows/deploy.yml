@@ -1,7 +1,12 @@
 name: GitHub Actions Demo
 
 on:
-  [push, pull_request]:
+  push:
+    branches:
+      - master
+      - stage
+      - dev
+  pull_request:
     branches:
       - master
       - stage
