@@ -1,5 +1,6 @@
-name: GitHub Actions Demo
+name: Energyx Deploy
 
+# pull request 가 master, stage, dev 브랜치일때 closed 즉, merge 됬을떄만 jobs 을 실행한다.
 on:
   pull_request:
     types: [closed]
@@ -10,28 +11,39 @@ on:
 
 jobs:
   build:
+    # 실행 OS 를 무엇으로 할것이냐.
     runs-on: ubuntu-18.04
 
     env:
+      # repository 에 설정한 secret key 값
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      # repository 에 설정한 secret key 값
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # 환경에 맞춰서 BUCKET_URL 설정 하는부분
       BUCKET_URL: ${{ github.ref == 'dev' && 'dev-qs.energyx.co.kr' || github.ref == 'stage' && 'stage-qs.energyx.co.kr' || 'qs.energyx.co.kr' }}
+      # 환경에 맞춰서 CLOUD_FRONT_ID 설정하는 부분
       CLOUD_FRONT_ID: ${{ github.ref == 'dev' && 'E20R96SCL3WQIA' || github.ref == 'stage' && 'E2X53NN8BR47FR' || 'E1KD2AVN3E5Z8M' }}
 
+    # node 버전 세팅하기위해 버전 선언하는 부분
+    # client 는 상관없으나 admin 은 template 때문에 node 버전을 올리게 될경우 테스트 후 신경 써주셔야됩니다.
     strategy:
       matrix:
         node-version: [12.18.2]
 
     steps:
-      - name: checkout
+      # 머지된 해당 브랜치로 체크아웃
+      - name: 브랜치 체크아웃
         uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      # 위에 선언한 node version 으로 세팅 하는 부분
+      - name: node-version 세팅
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Cache node modules
+      # node_modules 를 cache 하는 설정
+      # package-lock.json 을 보고 캐시 여부를 결정한다.
+      - name: node_modules 캐시
         uses: actions/cache@v1
         with:
           path: node_modules
@@ -39,19 +51,23 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
-      - name: Install Dependencies
+
+      - name: Dependencies 설치
         run: npm install
 
-      - name: Build
+      - name: 빌드
         run: npm run build
 
-      - name: Deploy
+      # s3 배포 설정
+      - name: S3 배포
         run: |
           aws s3 sync \
             --region ap-northeast-2 \
             --acl public-read --delete \
             build s3://${{env.BUCKET_URL}}
 
-      - name: Cloudfront cache remove
+      # CloudFront 캐시 초기화 설정
+      - name: Cloudfront 캐시 초기화
         run: |
           aws cloudfront create-invalidation --distribution-id ${{env.CLOUD_FRONT_ID}}	  --paths "/*"
+        if: ${{ github.ref == 'master'}}
