@@ -66,18 +66,8 @@ jobs:
             --acl public-read --delete \
             build s3://${{env.BUCKET_URL}}
 
-  deploy:
-    runs-on: ubuntu-18.04
-
-    env:
-      # repository 에 설정한 secret key 값
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      # repository 에 설정한 secret key 값
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      CLOUD_FRONT_ID: ${{ github.ref == 'dev' && 'E20R96SCL3WQIA' || github.ref == 'stage' && 'E2X53NN8BR47FR' || 'E1KD2AVN3E5Z8M' }}
-
-    steps:
       # CloudFront 캐시 초기화 설정
       - name: Cloudfront 캐시 초기화
         run: |
           aws cloudfront create-invalidation --distribution-id ${{env.CLOUD_FRONT_ID}}	  --paths "/*"
+        if: ${{ github.ref == 'master'}}
