@@ -70,6 +70,10 @@ jobs:
     runs-on: ubuntu-18.04
 
     env:
+      # repository 에 설정한 secret key 값
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      # repository 에 설정한 secret key 값
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       CLOUD_FRONT_ID: ${{ github.ref == 'dev' && 'E20R96SCL3WQIA' || github.ref == 'stage' && 'E2X53NN8BR47FR' || 'E1KD2AVN3E5Z8M' }}
 
     steps:
